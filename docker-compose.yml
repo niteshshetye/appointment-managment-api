@@ -1,0 +1,14 @@
+# Use root/example as user/password credentials
+version: '1.0'
+
+services:
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    env_file:
+      - ./.env
+
+
