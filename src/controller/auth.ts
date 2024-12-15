@@ -11,6 +11,29 @@ import {
   signinBodyValidation,
   signupBodyValidation,
 } from '../validation/auth';
+import { Email } from '../utils/Email';
+
+const sendTokenInResponse = (
+  user: IUserModal,
+  res: Response,
+  status: number,
+) => {
+  const tokens = signInJwt({ id: user._id as string, email: user.email });
+
+  return res.status(status).json({
+    status: 'success',
+    data: {
+      user: {
+        _id: user._id,
+        email: user.email,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        createdAt: user.createdAt,
+      },
+      ...tokens,
+    },
+  });
+};
 
 const signup = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -24,21 +47,18 @@ const signup = catchAsync(
       confirmPassword: result.confirmPassword,
     });
 
-    const tokens = signInJwt({ id: user._id as string, email: user.email });
+    const homeRouteLink = `${req.protocol}://${req.get('host')}`;
 
-    return res.status(201).json({
-      status: 'success',
-      data: {
-        user: {
-          _id: user._id,
-          email: user.email,
-          firstname: user.firstname,
-          lastname: user.lastname,
-          createdAt: user.createdAt,
-        },
-        ...tokens,
-      },
-    });
+    const email = new Email(
+      { email: user.email, firstname: user.firstname },
+      homeRouteLink,
+    );
+
+    email
+      .sendWelcome()
+      .catch((error) => console.log('error while sending email', error));
+
+    sendTokenInResponse(user, res, 201);
   },
 );
 
@@ -63,21 +83,7 @@ const signin = catchAsync(
       return next(new AppError(404, 'Invalid credentials'));
     }
 
-    const tokens = signInJwt({ id: user._id as string, email: user.email });
-
-    return res.status(201).json({
-      status: 'success',
-      data: {
-        user: {
-          _id: user._id,
-          email: user.email,
-          firstname: user.firstname,
-          lastname: user.lastname,
-          createdAt: user.createdAt,
-        },
-        ...tokens,
-      },
-    });
+    sendTokenInResponse(user, res, 200);
   },
 );
 
@@ -97,9 +103,24 @@ const forgotPassword = catchAsync(
     // link to reset the token
     const resetLink = `${req.protocol}://${req.get('host')}/api/v1/auth/reset-password/${passwordResetToken}`;
 
-    // TODO: send link via email
-
-    res.status(200).json({ status: 'success', data: { resetLink } });
+    try {
+      const email = new Email(
+        { email: user.email, firstname: user.firstname },
+        resetLink,
+      );
+      await email.sendResetPassword();
+      return res
+        .status(200)
+        .json({ status: 'success', message: 'Link send to your email' });
+    } catch (error) {
+      console.log(error);
+      return next(
+        new AppError(
+          500,
+          'Something went wrong while sending email! please try again.',
+        ),
+      );
+    }
   },
 );
 
@@ -134,21 +155,7 @@ const resetPassword = catchAsync(
     user.passwordResetToken = undefined;
     await user.save();
 
-    const tokens = signInJwt({ id: user._id as string, email: user.email });
-
-    res.status(200).json({
-      status: 'success',
-      data: {
-        user: {
-          _id: user._id,
-          email: user.email,
-          firstname: user.firstname,
-          lastname: user.lastname,
-          createdAt: user.createdAt,
-        },
-        ...tokens,
-      },
-    });
+    sendTokenInResponse(user, res, 200);
   },
 );
 

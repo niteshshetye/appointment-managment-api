@@ -83,6 +83,18 @@ userSchema.methods.generatePasswordResetToken = function (): string {
   return resetToken;
 };
 
+userSchema.methods.isPasswordChangedAfterLogin = function (
+  jwtTimeStamp: number,
+) {
+  if (!this.passwordChangedAt) return false;
+
+  const time = this.passwordChangedAt.getTime() as number;
+  const changeTimeStamp: number = parseInt(`${time / 1000}`, 10);
+
+  if (changeTimeStamp < jwtTimeStamp) return true;
+  else return false;
+};
+
 // query middelware
 userSchema.pre('save', async function (next) {
   // if password is not modified than dont do anything

@@ -21,6 +21,8 @@ export interface IUserModal extends Document {
   ): Promise<boolean>;
 
   generatePasswordResetToken(): string;
+
+  isPasswordChangedAfterLogin(jwtTimeStamp: number): boolean;
 }
 
 export interface IReqUser {
@@ -39,4 +41,6 @@ export interface IReqWithVerifiedUser extends Request {
 export interface ITokenUserPaylod {
   id: string;
   email: string;
+  iat?: number; // Issued at timestamp (optional, added by JWT by default)
+  exp?: number; // Expiration timestamp (optional, added by JWT by default)
 }

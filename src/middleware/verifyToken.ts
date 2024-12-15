@@ -1,12 +1,12 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { catchAsync } from '../utils/catchAsync';
 import { AppError } from '../utils/AppError';
 import { User } from '../model/user';
 import {
-  IReqUser,
   IReqWithVerifiedUser,
   ITokenUserPaylod,
+  IUserModal,
 } from '../types/user';
 
 export const signInJwt = (user: ITokenUserPaylod) => {
@@ -55,14 +55,29 @@ export const verifyToken = catchAsync(
     ) as ITokenUserPaylod;
 
     // fetch user
-    const user: IReqUser | null = await User.findById(payload.id, {
+    const user: IUserModal | null = await User.findById(payload.id, {
       active: true,
     });
 
-    // check user present or not
-    if (!user) return next(new AppError(404, 'User not found'));
+    if (!user)
+      // check user present or not
+      return next(new AppError(404, 'User not found'));
 
-    req.user = user;
+    //  check is passwortChangedAt is after issueing the token, when we implement change password
+    if (!user.isPasswordChangedAfterLogin(payload.iat || 0)) {
+      return next(
+        new AppError(401, 'User changed password please login again'),
+      );
+    }
+
+    req.user = {
+      _id: user._id as string,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      role: user.role,
+      createdAt: user.createdAt,
+    };
 
     next();
   },
