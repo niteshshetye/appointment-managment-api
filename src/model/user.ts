@@ -1,4 +1,4 @@
-import mongoose, { Schema, Model } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
@@ -109,7 +109,4 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-export const User: Model<IUserModal> = mongoose.model<IUserModal>(
-  'User',
-  userSchema,
-);
+export const User = mongoose.model<IUserModal>('User', userSchema);
