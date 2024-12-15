@@ -1,7 +1,7 @@
 import mongoose, { Schema, Model } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
-
+import crypto from 'crypto';
 import { IUserModal } from '../types/user';
 
 const userSchema = new Schema<IUserModal>({
@@ -64,6 +64,23 @@ userSchema.methods.comparePassword = async function (
   userPassword: string,
 ): Promise<boolean> {
   return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+userSchema.methods.generatePasswordResetToken = function (): string {
+  // create randome 32bytes string (reset token).
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  // create hash for that token
+  const passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  this.passwordResetToken = passwordResetToken;
+  // only valid for 10 min
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
 };
 
 // query middelware

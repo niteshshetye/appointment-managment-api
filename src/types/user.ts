@@ -19,6 +19,8 @@ export interface IUserModal extends Document {
     candidatePassword: string,
     userPassword: string,
   ): Promise<boolean>;
+
+  generatePasswordResetToken(): string;
 }
 
 export interface IReqUser {

@@ -21,3 +21,18 @@ export const signinBodyValidation = z.object({
     .email('Provide a valid email'),
   password: z.string({ message: 'Password is required' }),
 });
+
+export const forgotPasswordBodyValidation = z.object({
+  email: z
+    .string({ message: 'Email is required' })
+    .email('Provide a valid email'),
+});
+
+export const resetPasswordBodyValidation = z.object({
+  password: z
+    .string({ message: 'Password is required' })
+    .min(3, 'Password must be at least 3 characters long'),
+  confirmPassword: z
+    .string({ message: 'Confirm password is required' })
+    .min(3, 'Confirm Password must be at least 3 characters long'),
+});
