@@ -7,5 +7,7 @@ export const allowedRoles = (...roles: string[]) => {
     if (!roles.includes(req?.user?.role || '')) {
       next(new AppError(403, 'You dont have permission'));
     }
+
+    next();
   };
 };

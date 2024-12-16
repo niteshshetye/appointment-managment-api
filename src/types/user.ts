@@ -1,5 +1,6 @@
 import { Request } from 'express';
 import { Document } from 'mongoose';
+import { Role } from '../model/user';
 
 export interface IUserModal extends Document {
   firstname: string;
@@ -7,7 +8,7 @@ export interface IUserModal extends Document {
   email: string;
   password: string;
   createdAt: Date;
-  role: 'managers' | 'developer' | 'admin';
+  role: Role;
   photoUrl?: string;
   active?: boolean;
   confirmPassword?: string;
@@ -30,7 +31,7 @@ export interface IReqUser {
   firstname: string;
   lastname: string;
   email: string;
-  role: string;
+  role: Role;
   createdAt: Date;
 }
 

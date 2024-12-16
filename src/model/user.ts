@@ -4,6 +4,12 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { IUserModal } from '../types/user';
 
+export enum Role {
+  MANAGER = 'manager',
+  DEVELOPER = 'developer',
+  HR = 'hr',
+}
+
 const userSchema = new Schema<IUserModal>({
   firstname: {
     type: String,
@@ -22,8 +28,8 @@ const userSchema = new Schema<IUserModal>({
   },
   role: {
     type: String,
-    enum: ['managers', 'developer', 'admin'],
-    default: 'developer',
+    enum: Object.values(Role),
+    default: Role.DEVELOPER,
   },
   password: {
     type: String,
@@ -91,13 +97,13 @@ userSchema.methods.isPasswordChangedAfterLogin = function (
   const time = this.passwordChangedAt.getTime() as number;
   const changeTimeStamp: number = parseInt(`${time / 1000}`, 10);
 
-  if (changeTimeStamp < jwtTimeStamp) return true;
-  else return false;
+  return jwtTimeStamp < changeTimeStamp;
 };
 
 // query middelware
 userSchema.pre('save', async function (next) {
   // if password is not modified than dont do anything
+
   if (!this.isModified('password')) return next();
 
   // if document is not new

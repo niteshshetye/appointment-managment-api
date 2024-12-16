@@ -55,7 +55,8 @@ export const verifyToken = catchAsync(
     ) as ITokenUserPaylod;
 
     // fetch user
-    const user: IUserModal | null = await User.findById(payload.id, {
+    const user: IUserModal | null = await User.findOne({
+      _id: payload.id,
       active: true,
     });
 
@@ -64,7 +65,7 @@ export const verifyToken = catchAsync(
       return next(new AppError(404, 'User not found'));
 
     //  check is passwortChangedAt is after issueing the token, when we implement change password
-    if (!user.isPasswordChangedAfterLogin(payload.iat || 0)) {
+    if (user.isPasswordChangedAfterLogin(payload.iat || 0)) {
       return next(
         new AppError(401, 'User changed password please login again'),
       );
