@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Query, Schema } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
@@ -112,6 +112,16 @@ userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, 12);
   this.confirmPassword = undefined;
 
+  next();
+});
+
+userSchema.pre<Query<any, any>>(/^find/, function (next) {
+  this.find({ active: { $ne: false } });
+  next();
+});
+
+userSchema.pre('countDocuments', function (next) {
+  this.find({ active: { $ne: false } });
   next();
 });
 
