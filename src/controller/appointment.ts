@@ -12,12 +12,12 @@ import { todaysDate } from '../utils/utility';
 
 export const createAppointment = catchAsync(
   async (req: IReqWithVerifiedUser, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return next(new AppError(401, 'You are not authorized'));
+    }
+
     // verify body with zod
     const result = await createAppointmentBodyValidation.parseAsync(req.body);
-
-    if (!req.user) {
-      return next(new AppError(404, 'User not found'));
-    }
 
     // TODO we need to filter out if developer blocked manager
     // if so we filter out that user and create with others
@@ -52,7 +52,7 @@ export const getAppointments = catchAsync(
   async (req: IReqWithVerifiedUser, res: Response, next: NextFunction) => {
     // TODO add pagination
     if (!req.user) {
-      return next(new AppError(404, 'User not found'));
+      return next(new AppError(401, 'You are not authorized'));
     }
 
     const appointment_date = req.body.appointment_date
@@ -77,13 +77,13 @@ export const getAppointments = catchAsync(
 export const updateAppointment = catchAsync(
   async (req: IReqWithVerifiedUser, res: Response, next: NextFunction) => {
     if (!req.user) {
-      return next(new AppError(404, 'User not found'));
+      return next(new AppError(401, 'You are not authorized'));
     }
     const { id } = req.params;
     const result = await updateAppointmentBodyValidation.parseAsync(req.body);
 
     if (!Object.keys(result).length) {
-      return next(new AppError(404, 'Invalid payload'));
+      return next(new AppError(400, 'Invalid payload'));
     }
 
     const appointment = await Appointment.findOneAndUpdate(
@@ -107,7 +107,7 @@ export const updateAppointment = catchAsync(
 export const deleteAppointment = catchAsync(
   async (req: IReqWithVerifiedUser, res: Response, next: NextFunction) => {
     if (!req.user) {
-      return next(new AppError(404, 'User not found'));
+      return next(new AppError(401, 'You are not authorized'));
     }
     const { id } = req.params;
 
@@ -135,14 +135,19 @@ export const deleteAppointment = catchAsync(
 export const getAppointment = catchAsync(
   async (req: IReqWithVerifiedUser, res: Response, next: NextFunction) => {
     if (!req.user) {
-      return next(new AppError(404, 'User not found'));
+      return next(new AppError(401, 'You are not authorized'));
     }
+
     const { id } = req.params;
 
     const appointment = await Appointment.findOne({
       _id: id,
       manager_id: req.user._id,
     });
+
+    if (!appointment) {
+      return next(new AppError(404, 'No appointment found for this id'));
+    }
 
     res.status(200).json({ status: 'success', data: { appointment } });
   },
