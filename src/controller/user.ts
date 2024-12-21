@@ -13,7 +13,7 @@ export const updateUserRole = catchAsync(
     });
 
     if (!user) {
-      return next(new AppError(400, 'User not found!'));
+      return next(new AppError(404, 'User not found!'));
     }
 
     return res
@@ -41,13 +41,13 @@ export const deleteUser = catchAsync(
     const { userId } = req.params;
 
     if (!userId) {
-      return next(new AppError(404, 'User id requried to remove user'));
+      return next(new AppError(400, 'Invalid params'));
     }
 
     await User.findByIdAndUpdate(userId, { active: false });
 
     return res
-      .status(200)
+      .status(204)
       .json({ status: 'sucess', data: { message: 'User deleted' } });
   },
 );

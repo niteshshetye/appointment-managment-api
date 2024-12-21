@@ -96,7 +96,7 @@ export const updateAppointment = catchAsync(
 
     if (!appointment) {
       return next(
-        new AppError(404, 'You can only update appointment created by you'),
+        new AppError(403, 'You can only update appointment created by you'),
       );
     }
 
@@ -118,7 +118,7 @@ export const deleteAppointment = catchAsync(
 
     if (!appointment) {
       return next(
-        new AppError(404, 'You can only delete appointment created by you'),
+        new AppError(403, 'You can only delete appointment created by you'),
       );
     }
 
@@ -127,7 +127,7 @@ export const deleteAppointment = catchAsync(
     });
 
     res
-      .status(200)
+      .status(204)
       .json({ status: 'success', data: { message: 'Appointment deleted' } });
   },
 );
