@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import moment from 'moment';
 import { IAppointmentAttendeesModal } from '../types/appointmentAttendees';
 
 const appointmentAttendeesSchema =
@@ -18,7 +19,16 @@ const appointmentAttendeesSchema =
       enum: ['PENDING', 'ACCEPTED', 'DECLIEND'],
       default: 'PENDING',
     },
-    response_date: Date,
+    response_date: {
+      type: Date,
+      validate: {
+        validator: function (value: Date) {
+          // Ensure the date is in a valid ISO format
+          return moment(value, moment.ISO_8601, true).isValid();
+        },
+        message: (props) => `${props.value} is not a valid ISO date!`,
+      },
+    },
   });
 
 export const AppointmentAttendees = mongoose.model<IAppointmentAttendeesModal>(

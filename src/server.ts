@@ -3,6 +3,7 @@ import morgan from 'morgan';
 
 import authRoutes from './routes/auth';
 import userRoutes from './routes/user';
+import appointmentRoutes from './routes/appointment';
 import { notFound } from './middleware/not-found';
 import { globalErrorHandler } from './middleware/error';
 
@@ -13,6 +14,7 @@ app.use(morgan('dev'));
 
 app.use('/api/v1/auth/', authRoutes);
 app.use('/api/v1/user/', userRoutes);
+app.use('/api/v1/appointment/', appointmentRoutes);
 
 app.use('*', notFound);
 
