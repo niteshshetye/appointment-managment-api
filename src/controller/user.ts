@@ -24,13 +24,16 @@ export const updateUserRole = catchAsync(
 
 export const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const { page = 1, limit = 20 }: { page?: number; limit?: number } = req.query;
+  // TODO fetch users role vise
   const skip = (page - 1) * limit;
+
   const users = await User.find()
     .skip(skip)
     .limit(limit)
     .sort({ createdAt: -1 });
 
   const count = await User.countDocuments();
+
   return res
     .status(200)
     .json({ status: 'success', data: { users, totalCount: count } });

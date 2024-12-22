@@ -1,0 +1,142 @@
+[
+    {
+        "firstname": "Heather",
+        "lastname": "Austin",
+        "email": "testuser1@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    },
+    {
+        "firstname": "Richard",
+        "lastname": "Murray",
+        "email": "testuser2@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    },
+    {
+        "firstname": "Ashley",
+        "lastname": "Brown",
+        "email": "testuser3@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    },
+    {
+        "firstname": "Laura",
+        "lastname": "Espinoza",
+        "email": "testuser4@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    },
+    {
+        "firstname": "Kristin",
+        "lastname": "Chapman",
+        "email": "testuser5@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    },
+    {
+        "firstname": "Thomas",
+        "lastname": "Collier",
+        "email": "testuser6@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    },
+    {
+        "firstname": "Holly",
+        "lastname": "Nelson",
+        "email": "testuser7@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    },
+    {
+        "firstname": "Richard",
+        "lastname": "Robinson",
+        "email": "testuser8@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    },
+    {
+        "firstname": "Jason",
+        "lastname": "Martinez",
+        "email": "testuser9@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    },
+    {
+        "firstname": "Brett",
+        "lastname": "Romero",
+        "email": "testuser10@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    },
+    {
+        "firstname": "Julian",
+        "lastname": "Farmer",
+        "email": "testuser11@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    },
+    {
+        "firstname": "Molly",
+        "lastname": "Stuart",
+        "email": "testuser12@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    },
+    {
+        "firstname": "Steven",
+        "lastname": "Castillo",
+        "email": "testuser13@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    },
+    {
+        "firstname": "Veronica",
+        "lastname": "Reyes",
+        "email": "testuser14@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    },
+    {
+        "firstname": "Beth",
+        "lastname": "Barber",
+        "email": "testuser15@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    },
+    {
+        "firstname": "Anthony",
+        "lastname": "Peterson",
+        "email": "testuser16@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    },
+    {
+        "firstname": "Jennifer",
+        "lastname": "Soto",
+        "email": "testuser17@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    },
+    {
+        "firstname": "Brandon",
+        "lastname": "French",
+        "email": "testuser18@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    },
+    {
+        "firstname": "Lisa",
+        "lastname": "Jordan",
+        "email": "testuser19@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    },
+    {
+        "firstname": "Patricia",
+        "lastname": "Lee",
+        "email": "testuser20@nimapinfotech.com",
+        "password": "Nimap@123",
+        "confirmPassword": "Nimap@123"
+    }
+]

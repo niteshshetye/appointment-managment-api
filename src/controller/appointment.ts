@@ -36,6 +36,7 @@ export const createAppointment = catchAsync(
     const payload = result.developer_ids.map((developer_id) => ({
       developer_id,
       appointment_id: appointment._id,
+      createdby: req.user?._id || '',
     }));
 
     await AppointmentAttendees.create(payload);

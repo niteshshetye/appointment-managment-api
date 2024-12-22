@@ -6,11 +6,12 @@ import { Role } from '../model/user';
 
 const router = express.Router();
 
-router.use(verifyToken, allowedRoles(Role.HR));
+router.use(verifyToken);
 
+router.route('/').get(allowedRoles(Role.HR, Role.MANAGER), getAllUsers);
+
+router.use(allowedRoles(Role.HR));
 router.route('/update-role').post(updateUserRole);
-
-router.route('/').get(getAllUsers);
 router.route('/:userId').delete(deleteUser);
 
 export default router;

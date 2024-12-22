@@ -14,6 +14,11 @@ const appointmentAttendeesSchema =
       ref: 'User',
       required: [true, 'Developer is required'],
     },
+    createdby: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+      required: [true, 'Created by is required'],
+    },
     status: {
       type: String,
       enum: ['PENDING', 'ACCEPTED', 'DECLIEND'],
