@@ -9,6 +9,7 @@ import {
 import { AppError } from '../utils/AppError';
 import { catchAsync } from '../utils/catchAsync';
 import { todaysDate } from '../utils/utility';
+import mongoose from 'mongoose';
 
 export const createAppointment = catchAsync(
   async (req: IReqWithVerifiedUser, res: Response, next: NextFunction) => {
@@ -141,10 +142,92 @@ export const getAppointment = catchAsync(
 
     const { id } = req.params;
 
-    const appointment = await Appointment.findOne({
-      _id: id,
-      manager_id: req.user._id,
-    });
+    const [appointment] = await Appointment.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(id),
+        },
+      },
+      {
+        $lookup: {
+          from: 'appointmentattendees',
+          localField: '_id',
+          foreignField: 'appointment_id',
+          as: 'appointment_attendees',
+        },
+      },
+      {
+        $unwind: '$appointment_attendees',
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'appointment_attendees.developer_id',
+          foreignField: '_id',
+          as: 'developer_details',
+        },
+      },
+      {
+        $group: {
+          _id: '_id',
+          manager_id: {
+            $first: '$manager_id',
+          },
+          title: {
+            $first: '$title',
+          },
+          description: {
+            $first: '$description',
+          },
+          appointment_date: {
+            $first: '$appointment_date',
+          },
+          createdAt: {
+            $first: '$createdAt',
+          },
+          modifiedAt: {
+            $first: '$modifiedAt',
+          },
+          appointment_attendees: {
+            $push: {
+              _id: '$appointment_attendees._id',
+              developer_id: '$appointment_attendees.developer_id',
+              createdby: '$appointment_attendees.createdby',
+              status: '$appointment_attendees.status',
+              developer_email: {
+                $first: '$developer_details.email',
+              },
+              developer_firstname: {
+                $first: '$developer_details.firstname',
+              },
+              developer_lastname: {
+                $first: '$developer_details.lastname',
+              },
+            },
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'manager_id',
+          foreignField: '_id',
+          as: 'manager_details',
+        },
+      },
+      {
+        $addFields: {
+          manager_firstname: { $first: '$manager_details.firstname' },
+          manager_lastname: { $first: '$manager_details.lastname' },
+          manager_email: { $first: '$manager_details.email' },
+        },
+      },
+      {
+        $project: {
+          manager_details: 0,
+        },
+      },
+    ]);
 
     if (!appointment) {
       return next(new AppError(404, 'No appointment found for this id'));
