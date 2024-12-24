@@ -154,57 +154,42 @@ export const getAppointment = catchAsync(
           localField: '_id',
           foreignField: 'appointment_id',
           as: 'appointment_attendees',
-        },
-      },
-      {
-        $unwind: '$appointment_attendees',
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'appointment_attendees.developer_id',
-          foreignField: '_id',
-          as: 'developer_details',
-        },
-      },
-      {
-        $group: {
-          _id: '_id',
-          manager_id: {
-            $first: '$manager_id',
-          },
-          title: {
-            $first: '$title',
-          },
-          description: {
-            $first: '$description',
-          },
-          appointment_date: {
-            $first: '$appointment_date',
-          },
-          createdAt: {
-            $first: '$createdAt',
-          },
-          modifiedAt: {
-            $first: '$modifiedAt',
-          },
-          appointment_attendees: {
-            $push: {
-              _id: '$appointment_attendees._id',
-              developer_id: '$appointment_attendees.developer_id',
-              createdby: '$appointment_attendees.createdby',
-              status: '$appointment_attendees.status',
-              developer_email: {
-                $first: '$developer_details.email',
-              },
-              developer_firstname: {
-                $first: '$developer_details.firstname',
-              },
-              developer_lastname: {
-                $first: '$developer_details.lastname',
+          pipeline: [
+            {
+              $lookup: {
+                from: 'users',
+                localField: 'developer_id',
+                foreignField: '_id',
+                as: 'developer_details',
               },
             },
-          },
+            {
+              $project: {
+                'developer_details.password': 0,
+                'developer_details._id': 0,
+                'developer_details.confirmPassword': 0,
+                'developer_details.createdAt': 0,
+                'developer_details.modifiedAt': 0,
+              },
+            },
+            {
+              $replaceRoot: {
+                newRoot: {
+                  $mergeObjects: [
+                    {
+                      $arrayElemAt: ['$developer_details', 0],
+                    },
+                    '$$ROOT',
+                  ],
+                },
+              },
+            },
+            {
+              $project: {
+                developer_details: 0,
+              },
+            },
+          ],
         },
       },
       {
@@ -216,10 +201,23 @@ export const getAppointment = catchAsync(
         },
       },
       {
-        $addFields: {
-          manager_firstname: { $first: '$manager_details.firstname' },
-          manager_lastname: { $first: '$manager_details.lastname' },
-          manager_email: { $first: '$manager_details.email' },
+        $project: {
+          'manager_details.password': 0,
+          'manager_details.confirmPassword': 0,
+          'manager_details.createdAt': 0,
+          'manager_details.modifiedAt': 0,
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [
+              {
+                $arrayElemAt: ['$manager_details', 0],
+              },
+              '$$ROOT',
+            ],
+          },
         },
       },
       {
