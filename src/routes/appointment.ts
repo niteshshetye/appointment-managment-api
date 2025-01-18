@@ -12,13 +12,12 @@ import {
 
 const router = express.Router();
 
-router.use(verifyToken, allowedRoles(Role.MANAGER));
+router.use(verifyToken);
 
+router.route('/:id').get(getAppointment);
+
+router.use(allowedRoles(Role.MANAGER));
 router.route('/').post(createAppointment).get(getAppointments);
-router
-  .route('/:id')
-  .patch(updateAppointment)
-  .delete(deleteAppointment)
-  .get(getAppointment);
+router.route('/:id').patch(updateAppointment).delete(deleteAppointment);
 
 export default router;

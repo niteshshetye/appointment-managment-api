@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import moment from 'moment';
 import { IAppointmentAttendeesModal } from '../types/appointmentAttendees';
+import { APPOINTMENT_STATUS } from '../utils/constants';
 
 const appointmentAttendeesSchema =
   new mongoose.Schema<IAppointmentAttendeesModal>({
@@ -21,7 +22,7 @@ const appointmentAttendeesSchema =
     },
     status: {
       type: String,
-      enum: ['PENDING', 'ACCEPTED', 'DECLIEND'],
+      enum: APPOINTMENT_STATUS,
       default: 'PENDING',
     },
     response_date: {

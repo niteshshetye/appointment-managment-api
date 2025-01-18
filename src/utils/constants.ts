@@ -1,0 +1,1 @@
+export const APPOINTMENT_STATUS = ['PENDING', 'ACCEPTED', 'DECLIEND'];

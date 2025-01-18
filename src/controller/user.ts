@@ -3,6 +3,7 @@ import { catchAsync } from '../utils/catchAsync';
 import { assigneRoleBodyValidation } from '../validation/user';
 import { User } from '../model/user';
 import { AppError } from '../utils/AppError';
+import { getSkip } from '../utils/utility';
 
 export const updateUserRole = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -23,9 +24,9 @@ export const updateUserRole = catchAsync(
 );
 
 export const getAllUsers = catchAsync(async (req: Request, res: Response) => {
-  const { page = 1, limit = 20 }: { page?: number; limit?: number } = req.query;
+  const { page = 1, limit = 10 }: { page?: number; limit?: number } = req.query;
   // TODO fetch users role vise
-  const skip = (page - 1) * limit;
+  const skip = getSkip(page, limit);
 
   const users = await User.find()
     .skip(skip)
