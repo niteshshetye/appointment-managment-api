@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import pug from 'pug';
 import { convert } from 'html-to-text';
+import { PRODUCTION } from './constants';
 
 export class Email {
   to: string;
@@ -17,7 +18,7 @@ export class Email {
   }
 
   createTransport() {
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== PRODUCTION) {
       return nodemailer.createTransport({
         host: process.env.EMAIL_HOST || '',
         port: process.env.EMAIL_PORT,

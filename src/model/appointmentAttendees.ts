@@ -1,24 +1,36 @@
 import mongoose from 'mongoose';
 import moment from 'moment';
 import { IAppointmentAttendeesModal } from '../types/appointmentAttendees';
-import { APPOINTMENT_STATUS } from '../utils/constants';
+import {
+  APPOINTMENT_ATTENDEES_SCHEMA_DATABASE_VALIDATION_MESSAGE,
+  APPOINTMENT_STATUS,
+} from '../utils/constants';
 
 const appointmentAttendeesSchema =
   new mongoose.Schema<IAppointmentAttendeesModal>({
     appointment_id: {
       type: mongoose.Schema.ObjectId,
       ref: 'Appointment',
-      required: [true, 'Appointment id is required'],
+      required: [
+        true,
+        APPOINTMENT_ATTENDEES_SCHEMA_DATABASE_VALIDATION_MESSAGE.APPOINTMENT_ID_REQUIRED,
+      ],
     },
     developer_id: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
-      required: [true, 'Developer is required'],
+      required: [
+        true,
+        APPOINTMENT_ATTENDEES_SCHEMA_DATABASE_VALIDATION_MESSAGE.DEVELOPER_ID_REQUIRED,
+      ],
     },
     createdby: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
-      required: [true, 'Created by is required'],
+      required: [
+        true,
+        APPOINTMENT_ATTENDEES_SCHEMA_DATABASE_VALIDATION_MESSAGE.CREATED_BY_REQUIRED,
+      ],
     },
     status: {
       type: String,

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../utils/AppError';
+import { DEVELOPMENT, ERROR_TYPE, PRODUCTION } from '../utils/constants';
 
 const sendDevError = (error: AppError, res: Response) => {
   return res.status(error.statusCode).json({
@@ -68,14 +69,14 @@ export const globalErrorHandler = (
   error.statusCode = error.statusCode || 500;
   error.status = error.status || 'error';
 
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === DEVELOPMENT) {
     sendDevError(error, res);
   }
 
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === PRODUCTION) {
     let err = { ...error };
 
-    if (error.name === 'CastError') {
+    if (error.name === ERROR_TYPE.CAST_ERROR) {
       err = handleCastErrorDB(error);
     }
 
@@ -83,19 +84,19 @@ export const globalErrorHandler = (
       err = handleDuplicateErrorDB(error);
     }
 
-    if (error.name === 'ValidationError') {
+    if (error.name === ERROR_TYPE.VALIDATION_ERROR) {
       err = handleValidationErrorDB(error);
     }
 
-    if (error.name === 'JsonWebTokenError') {
+    if (error.name === ERROR_TYPE.JSON_WEB_TOKEN_ERROR) {
       err = handleJwtInvalidError();
     }
 
-    if (error.name === 'TokenExpiredError') {
+    if (error.name === ERROR_TYPE.TOKEN_EXPIRED_ERROR) {
       err = handleJwtExpiredError();
     }
 
-    if (error.name === 'ZodError') {
+    if (error.name === ERROR_TYPE.ZOD_ERROR) {
       err = handleZodeError(error);
     }
 

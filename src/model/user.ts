@@ -3,6 +3,7 @@ import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { IUserModal } from '../types/user';
+import { USERS_SCHEMA_DATABASE_VALIDATION_MESSAGE } from '../utils/constants';
 
 export enum Role {
   MANAGER = 'manager',
@@ -13,18 +14,27 @@ export enum Role {
 const userSchema = new Schema<IUserModal>({
   firstname: {
     type: String,
-    required: [true, 'Firstname is required'],
+    required: [
+      true,
+      USERS_SCHEMA_DATABASE_VALIDATION_MESSAGE.FIRST_NAME_REQUIRED,
+    ],
   },
   lastname: {
     type: String,
-    required: [true, 'Lastname is required'],
+    required: [
+      true,
+      USERS_SCHEMA_DATABASE_VALIDATION_MESSAGE.LAST_NAME_REQUIRED,
+    ],
   },
   email: {
     type: String,
-    required: [true, 'Email is requried'],
+    required: [true, USERS_SCHEMA_DATABASE_VALIDATION_MESSAGE.EMAIL_REQUIRED],
     unique: true,
     trim: true,
-    validate: [validator.isEmail, 'Provide valid email'],
+    validate: [
+      validator.isEmail,
+      USERS_SCHEMA_DATABASE_VALIDATION_MESSAGE.EMAIL_VALIDATE,
+    ],
   },
   role: {
     type: String,
@@ -33,16 +43,29 @@ const userSchema = new Schema<IUserModal>({
   },
   password: {
     type: String,
-    required: [true, 'Password is required'],
-    minlength: [3, 'Password must be atleast 3 char long'],
+    required: [
+      true,
+      USERS_SCHEMA_DATABASE_VALIDATION_MESSAGE.PASSWORD_REQUIRED,
+    ],
+    minlength: [
+      3,
+      USERS_SCHEMA_DATABASE_VALIDATION_MESSAGE.MIN_LENGTH_PASSWORD,
+    ],
     select: false,
   },
   confirmPassword: {
     type: String,
-    required: [true, 'Confirm password is required'],
-    minlength: [3, 'Confirm password must be atleast 3 char long'],
+    required: [
+      true,
+      USERS_SCHEMA_DATABASE_VALIDATION_MESSAGE.CONFIRM_PASSWORD_REQUIRED,
+    ],
+    minlength: [
+      3,
+      USERS_SCHEMA_DATABASE_VALIDATION_MESSAGE.MIN_LENGTH_CONFIRM_PASSWORD,
+    ],
     validate: {
-      message: 'Password does not match with confirm password',
+      message:
+        USERS_SCHEMA_DATABASE_VALIDATION_MESSAGE.VALIDATE_CONFIRM_PASSWORD,
       validator: function (value: string): boolean {
         return value === this.password; // this will only run when we save
       },
