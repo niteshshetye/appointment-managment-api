@@ -5,7 +5,7 @@ import app from './server';
 
 const startServer = async () => {
   try {
-    const mongooseURL = process.env.ME_CONFIG_MONGODB_URL || '';
+    const mongooseURL = `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.MONGO_DB_HOST_NAME}:${process.env.MONGO_DB_PORT}/${process.env.MONGO_INITDB_DATABASE}?authSource=admin`;
     await mongoose.connect(mongooseURL);
 
     console.log('Database connected succefully!');
