@@ -22,4 +22,6 @@ RUN npm ci --only=production
 
 COPY --from=build /app/dist ./dist
 
+COPY ./src/views ./dist/views
+
 CMD ["node", "dist/index.js"]
